@@ -1,9 +1,10 @@
 import express, { Express } from "express"
 import dotenv from "dotenv"
-dotenv.config({ path: ".env.local" })
+dotenv.config({ path: process.env.NODE_ENV === "development" ? ".env.local" : ".env" })
 import "reflect-metadata"
 import initDatabase from "./utils/initDatabase"
 import { ApolloServer } from "apollo-server-express"
+import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core"
 import { buildSchema } from "type-graphql"
 import { AuthResolver } from "./graphql/resolvers/auth.resolver"
 import { UserResolver } from "./graphql/resolvers/user.resolver"
@@ -24,6 +25,9 @@ const startServer = async () => {
         const server = new ApolloServer({
             schema,
             csrfPrevention: false,
+            introspection: true,
+            cache: "bounded",
+            plugins: [ApolloServerPluginLandingPageLocalDefault],
             context: ({ req, res }) => ({ req, res }),
         })
         await server.start()
