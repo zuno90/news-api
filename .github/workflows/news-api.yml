@@ -17,8 +17,7 @@ jobs:
                       cd code/
                       rm -rf news-api/
                       git clone https://${{ secrets.NEWS_DEV_TOKEN_SSH }}@github.com/zuno90/news-api.git
-                      echo ${{ secrets.NEWS_DEV_TOKEN_SSH }}
-                      docker compose up -d news-admin
+                      docker-compose up -d news-api
                   #   cd news-api
                   #   DOCKER_BUILDKIT=1 docker build -t admin:$GITHUB_RUN_NUMBER .
                   #   docker stop admin || echo "OK"
