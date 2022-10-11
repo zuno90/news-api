@@ -1,0 +1,38 @@
+name: deploy news-api by ZUNO
+on: [workflow_dispatch]
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        steps:
+            - name: executing remote ssh commands using password
+              uses: supnobita/ssh-action@master
+              with:
+                  host: 54.169.185.39
+                  username: ubuntu
+                  key: ${{ secrets.ADMIN_DEV_SECRET }}
+                  port: 22
+                  envs: GITHUB_RUN_NUMBER
+                  script: |
+                      cd code/
+                      rm -rf admin/
+                      git clone https://${{ secrets.ADMIN_DEV_TOKEN_SSH }}@github.com/zuno90/admin.git
+                      echo ${{ secrets.ADMIN_DEV_TOKEN_SSH }}
+                      cd admin
+                      DOCKER_BUILDKIT=1 docker build -t admin:$GITHUB_RUN_NUMBER .
+                      docker stop admin || echo "OK"
+                      docker rm admin || echo "OK"
+                      docker run -d --name admin -p 6972:6972 \
+                          -e NODE_ENV=production \
+                          -e SECRET_KEY=${{ secrets.SECRET_KEY }} \
+                          -e HOST=172.31.16.179 \
+                          -e PORT=${{ secrets.ADMIN_PORT }} \
+                          -e ADV_DB_URL=${{ secrets.ADV_DB_URL }} \
+                          -e PUB_DB_URL=${{ secrets.PUB_DB_URL }} \
+                          -e REDIS_URL=${{ secrets.REDIS_URL }} \
+                          -e DB_HOST=${{ secrets.ADMIN_DB_HOST }} \
+                          -e DB_PORT=${{ secrets.ADMIN_DB_PORT }} \
+                          -e DB_USERNAME=${{ secrets.ADMIN_DB_USERNAME }} \
+                          -e DB_PASSWORD=${{ secrets.ADMIN_DB_PASSWORD }} \
+                          -e DB_NAME=${{ secrets.ADMIN_DB_NAME }} \
+                          admin:$GITHUB_RUN_NUMBER
