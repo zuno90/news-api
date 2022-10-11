@@ -15,12 +15,11 @@ ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app/api
+# COPY ./news-api/package*.json .
 
-COPY ./news-api/package*.json .
+RUN npm ci --only=production
 
-RUN yarn --only=production
-
-COPY ./news-api/ .
+# COPY ./news-api/ .
 
 COPY --from=development /urs/src/app/dist ./dist
 
