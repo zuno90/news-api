@@ -1,9 +1,9 @@
 # development
 FROM node:alpine as development
 WORKDIR /usr/src/app/api
-COPY ./graphql-api/package*.json .
+COPY ./news-api/package*.json .
 RUN yarn
-COPY ./graphql-api/ .
+COPY ./news-api/ .
 RUN yarn build
 
 # ENTRYPOINT ["./mongo-init.sh"]
@@ -16,11 +16,11 @@ ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app/api
 
-COPY ./graphql-api/package*.json .
+COPY ./news-api/package*.json .
 
 RUN yarn --only=production
 
-COPY ./graphql-api/ .
+COPY ./news-api/ .
 
 COPY --from=development /urs/src/app/dist ./dist
 
