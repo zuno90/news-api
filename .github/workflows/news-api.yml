@@ -18,23 +18,20 @@ jobs:
                       rm -rf news-api/
                       git clone https://${{ secrets.NEWS_DEV_TOKEN_SSH }}@github.com/zuno90/news-api.git
                       cd news-api/
-                      touch .env
-                      docker-compose up -d news-api
-                  #   cd news-api
-                  #   DOCKER_BUILDKIT=1 docker build -t admin:$GITHUB_RUN_NUMBER .
-                  #   docker stop admin || echo "OK"
-                  #   docker rm admin || echo "OK"
-                  #   docker run -d --name admin -p 6972:6972 \
-                  #       -e NODE_ENV=production \
-                  #       -e SECRET_KEY=${{ secrets.SECRET_KEY }} \
-                  #       -e HOST=172.31.16.179 \
-                  #       -e PORT=${{ secrets.ADMIN_PORT }} \
-                  #       -e ADV_DB_URL=${{ secrets.ADV_DB_URL }} \
-                  #       -e PUB_DB_URL=${{ secrets.PUB_DB_URL }} \
-                  #       -e REDIS_URL=${{ secrets.REDIS_URL }} \
-                  #       -e DB_HOST=${{ secrets.ADMIN_DB_HOST }} \
-                  #       -e DB_PORT=${{ secrets.ADMIN_DB_PORT }} \
-                  #       -e DB_USERNAME=${{ secrets.ADMIN_DB_USERNAME }} \
-                  #       -e DB_PASSWORD=${{ secrets.ADMIN_DB_PASSWORD }} \
-                  #       -e DB_NAME=${{ secrets.ADMIN_DB_NAME }} \
-                  #       admin:$GITHUB_RUN_NUMBER
+                      DOCKER_BUILDKIT=1 docker build -t news-api:$GITHUB_RUN_NUMBER .
+                      docker stop news-api || echo "OK"
+                      docker rm news-api || echo "OK"
+                      docker run -d --name news-api -p ${{ secrets.PORT }}:${{ secrets.PORT }} \
+                          -e NODE_ENV=production \
+                          -e HOST=172.31.16.179 \
+                          -e MONGO_HOST=${{ secrets.MONGO_HOST }} \
+                          -e MONGO_PORT=${{ secrets.MONGO_PORT }} \
+                          -e MONGO_USERNAME=${{ secrets.MONGO_USERNAME }} \
+                          -e MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }} \
+                          -e DATABASE_NAME=${{ secrets.DATABASE_NAME }} \
+                          -e SECRET=${{ secrets.SECRET }} \
+                          -e GG_DRIVE_CLIENT=${{ secrets.GG_DRIVE_CLIENT }} \
+                          -e GG_DRIVE_SECRET=${{ secrets.GG_DRIVE_SECRET }} \
+                          -e GG_DRIVE_REDIRECT_URI=${{ secrets.GG_DRIVE_REDIRECT_URI }} \
+                          -e GG_DRIVE_REFRESH_TOKEN=${{ secrets.GG_DRIVE_REFRESH_TOKEN }} \
+                          news-api:$GITHUB_RUN_NUMBER
