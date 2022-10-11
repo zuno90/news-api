@@ -42,9 +42,9 @@ const startServer = async () => {
             path: "/gql/v1",
         })
 
-        const PORT = process.env.PORT
+        const PORT = process.env.PORT || 5005
         await new Promise<void>(r => app.listen({ port: PORT }, r))
-        console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath} 🚀`)
+        console.log(`🚀 Server ready at https://news-api.dadsnetwork.co/${server.graphqlPath} 🚀`)
     } catch (error) {
         console.error(error)
     }
