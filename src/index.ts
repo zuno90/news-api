@@ -34,7 +34,15 @@ const startServer = async () => {
 
         server.applyMiddleware({
             app,
-            cors: { origin: "*" },
+            cors: {
+                origin:
+                    process.env.NODE_ENV === "development"
+                        ? "*"
+                        : [
+                              "https://news-admin.dadsnetwork.co",
+                              "https://dads-news-client-git-develop-bosssixsam.vercel.app",
+                          ],
+            },
             path: "/gql/v1",
         })
 
