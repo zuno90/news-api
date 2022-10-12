@@ -1,9 +1,10 @@
 import express, { Express } from "express"
 import dotenv from "dotenv"
-dotenv.config({ path: process.env.NODE_ENV === "development" ? ".env.local" : ".env" })
+dotenv.config()
+// dotenv.config({ path: ".env.local" })
 import "reflect-metadata"
 import initDatabase from "./utils/initDatabase"
-import { ApolloServer } from "apollo-server-express"
+import { ApolloServer, CorsOptions } from "apollo-server-express"
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core"
 import { buildSchema } from "type-graphql"
 import { AuthResolver } from "./graphql/resolvers/auth.resolver"
@@ -15,6 +16,7 @@ import { FileResolver } from "./graphql/resolvers/file.resolver"
 const graphqlUploadExpress = require("graphql-upload/graphqlUploadExpress.js")
 
 const startServer = async () => {
+    console.log(process.env.NODE_ENV)
     try {
         await initDatabase() // init DB
         const schema = await buildSchema({
@@ -32,15 +34,23 @@ const startServer = async () => {
         })
         await server.start()
         const app: Express = express()
+        // check cors
+        const corsOptions: CorsOptions = {
+            origin:
+                process.env.NODE_ENV === "development"
+                    ? "*"
+                    : [
+                          "https://news-admin.dadsnetwork.co/",
+                          "https://dads-news-client-git-develop-bosssixsam.vercel.app",
+                      ],
+            credentials: true,
+            optionsSuccessStatus: 200,
+        }
         app.use(graphqlUploadExpress())
 
         app.use("/public", express.static("src/public")) // change upload -> public path
 
-        server.applyMiddleware({
-            app,
-            cors: { origin: "*" },
-            path: "/gql/v1",
-        })
+        server.applyMiddleware({ app, cors: corsOptions, path: "/gql/v1" })
 
         const PORT = process.env.PORT || 5005
         await new Promise<void>(r => app.listen({ port: PORT }, r))

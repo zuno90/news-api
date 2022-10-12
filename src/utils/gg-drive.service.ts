@@ -17,11 +17,6 @@ export const generatePublicURI = async (fileId: any) => {
         requestBody: { role: "reader", type: "anyone" },
     })
     return fileId
-    // const res = await driveService.files.get({
-    //     fileId,
-    //     fields: "webViewLink, webContentLink",
-    // })
-    // return res.data.webViewLink
 }
 
 export const uploadFile = async (file: FileUpload) => {
@@ -29,6 +24,7 @@ export const uploadFile = async (file: FileUpload) => {
         requestBody: { name: file.filename, mimeType: file.mimetype },
         media: { mimeType: "image/*", body: file.createReadStream() },
     })
+    console.log(res.data)
     return res.data
 }
 
