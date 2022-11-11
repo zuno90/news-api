@@ -89,7 +89,7 @@ export class PostResolver {
         }
     }
 
-    @Query(() => PostObjectResponse, { nullable: true })
+    @Query(() => PostArrResponse, { nullable: true })
     // @UseMiddleware(authMiddleware)
     async getPostsByCategoryId(
         @Ctx() ctx: IContext,
@@ -101,6 +101,7 @@ export class PostResolver {
             const posts = await Post.find(
                 status ? { status, category: cateId } : { category: cateId }
             )
+
             return {
                 success: true,
                 data: posts,

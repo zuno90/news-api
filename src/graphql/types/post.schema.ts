@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID, registerEnumType } from "type-graphql"
+import { ObjectType, Field, ID } from "type-graphql"
 import { MinLength } from "class-validator"
 import { ObjectId } from "mongoose"
 import { CategoryType } from "./category.schema"

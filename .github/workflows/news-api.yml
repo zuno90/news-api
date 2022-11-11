@@ -18,9 +18,9 @@ jobs:
                       rm -rf news-api/
                       git clone https://${{ secrets.NEWS_DEV_TOKEN_SSH }}@github.com/zuno90/news-api.git
                       cd news-api/
-                      DOCKER_BUILDKIT=1 docker build -t news-api:$GITHUB_RUN_NUMBER .
                       docker stop news-api || echo "OK"
                       docker rm news-api || echo "OK"
+                      DOCKER_BUILDKIT=1 docker build -t news-api:$GITHUB_RUN_NUMBER .
                       docker run -d --name news-api -p ${{ secrets.PORT }}:${{ secrets.PORT }} \
                           -e NODE_ENV=production \
                           -e HOST=172.31.16.179 \
