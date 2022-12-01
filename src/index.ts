@@ -42,6 +42,7 @@ const startServer = async () => {
                     : [
                           "https://news-admin.dadsnetwork.co",
                           "https://dads-news-client-git-develop-bosssixsam.vercel.app",
+                          "http://localhost:3000",
                       ],
             credentials: true,
             optionsSuccessStatus: 200,
